@@ -1,10 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Retrieval System - Presentation</title>
     <style>
+        /* Solarized Light Theme */
+        :root {
+            --base03: #002b36;
+            --base02: #073642;
+            --base01: #586e75;
+            --base00: #657b83;
+            --base0: #839496;
+            --base1: #93a1a1;
+            --base2: #eee8d5;
+            --base3: #fdf6e3;
+            --yellow: #b58900;
+            --orange: #cb4b16;
+            --red: #dc322f;
+            --magenta: #d33682;
+            --violet: #6c71c4;
+            --blue: #268bd2;
+            --cyan: #2aa198;
+            --green: #859900;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,8 +34,10 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
+            background-color: var(--base3);
+            /* Solarized Light Background */
+            color: var(--base00);
+            /* Solarized Base00 Text */
             overflow: hidden;
         }
 
@@ -33,30 +56,32 @@
 
         h1 {
             font-size: 3.5rem;
-            background: linear-gradient(90deg, #00d4ff, #7c3aed);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--orange);
+            /* Solarized Orange */
             margin-bottom: 30px;
         }
 
         h2 {
             font-size: 2.5rem;
-            color: #00d4ff;
+            color: var(--yellow);
+            /* Solarized Yellow */
             margin-bottom: 40px;
-            border-bottom: 3px solid #7c3aed;
+            border-bottom: 3px solid var(--base2);
             padding-bottom: 15px;
         }
 
         h3 {
             font-size: 1.8rem;
-            color: #a78bfa;
+            color: var(--blue);
+            /* Solarized Blue */
             margin: 20px 0;
         }
 
         p {
             font-size: 1.4rem;
             line-height: 1.8;
-            color: #e2e8f0;
+            color: var(--base01);
+            /* Solarized Base01 */
             margin-bottom: 20px;
         }
 
@@ -69,14 +94,14 @@
             font-size: 1.4rem;
             margin: 15px 0;
             position: relative;
-            color: #e2e8f0;
+            color: var(--base01);
         }
 
         li::before {
             content: "▸";
             position: absolute;
             left: -30px;
-            color: #00d4ff;
+            color: var(--orange);
         }
 
         .center {
@@ -89,7 +114,7 @@
 
         .subtitle {
             font-size: 1.8rem;
-            color: #a78bfa;
+            color: var(--base01);
             margin-top: 20px;
         }
 
@@ -108,22 +133,25 @@
         }
 
         .stat-card {
-            background: rgba(124, 58, 237, 0.2);
-            border: 1px solid #7c3aed;
+            background: var(--base2);
+            /* Solarized Base2 */
+            border: 1px solid var(--base1);
             border-radius: 15px;
             padding: 30px;
             text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .stat-value {
             font-size: 3rem;
             font-weight: bold;
-            color: #00d4ff;
+            color: var(--magenta);
+            /* Solarized Magenta */
         }
 
         .stat-label {
             font-size: 1.2rem;
-            color: #a78bfa;
+            color: var(--base01);
             margin-top: 10px;
         }
 
@@ -132,41 +160,54 @@
             border-collapse: separate;
             border-spacing: 0;
             margin: 20px 0;
+            background-color: var(--base2);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
-        th, td {
+        th,
+        td {
             padding: 15px 20px;
             text-align: left;
             font-size: 1.2rem;
+            color: var(--base00);
         }
 
         th {
-            background: rgba(0, 212, 255, 0.2);
-            color: #00d4ff;
-            border-bottom: 2px solid #00d4ff;
+            background-color: var(--base2);
+            color: var(--orange);
+            border-bottom: 2px solid var(--base1);
+            font-weight: bold;
         }
 
         td {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--base1);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
         }
 
         tr:hover td {
-            background: rgba(124, 58, 237, 0.1);
+            background-color: rgba(0, 0, 0, 0.02);
         }
 
         .architecture-box {
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid #7c3aed;
+            background: var(--base2);
+            border: 2px solid var(--blue);
             border-radius: 15px;
             padding: 40px;
             margin: 30px 0;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             font-size: 1.4rem;
             text-align: center;
+            color: var(--base00);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .arrow {
-            color: #00d4ff;
+            color: var(--orange);
             margin: 0 15px;
         }
 
@@ -175,7 +216,7 @@
             bottom: 30px;
             right: 50px;
             font-size: 1.2rem;
-            color: #64748b;
+            color: var(--base1);
         }
 
         .nav-hint {
@@ -184,14 +225,15 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 1rem;
-            color: #64748b;
+            color: var(--base1);
         }
 
         .highlight {
-            background: rgba(0, 212, 255, 0.2);
+            background: rgba(181, 137, 0, 0.2);
+            /* Yellow tint */
             padding: 5px 15px;
             border-radius: 5px;
-            color: #00d4ff;
+            color: var(--base00);
         }
 
         .conclusion-grid {
@@ -202,25 +244,28 @@
         }
 
         .conclusion-card {
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid #00d4ff;
+            background: var(--base2);
+            border: 1px solid var(--cyan);
             border-radius: 15px;
             padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .conclusion-card h3 {
-            color: #00d4ff;
+            color: var(--cyan);
             margin-bottom: 15px;
         }
     </style>
 </head>
+
 <body>
     <!-- Slide 1: Title -->
     <div class="slide active" id="slide1">
         <div class="center">
             <h1>🚗 Car Retrieval System</h1>
-            <p class="subtitle">An End-to-End Deep Learning Approach for<br>Indonesian Vehicle Detection and Classification</p>
-            <div style="margin-top: 60px; color: #64748b; font-size: 1.2rem;">
+            <p class="subtitle">An End-to-End Deep Learning Approach for<br>Indonesian Vehicle Detection and
+                Classification</p>
+            <div style="margin-top: 60px; color: var(--base1); font-size: 1.2rem;">
                 <p>Machine Learning Engineering Challenge</p>
                 <p>January 2026</p>
             </div>
@@ -258,15 +303,15 @@
     <div class="slide" id="slide3">
         <h2>System Architecture</h2>
         <div class="architecture-box">
-            <span style="color: #a78bfa">Input Image/Video</span>
+            <span style="color: var(--violet)">Input Image/Video</span>
             <span class="arrow">→</span>
-            <span style="color: #00d4ff">YOLOv8 Detector</span>
+            <span style="color: var(--blue)">YOLOv8 Detector</span>
             <span class="arrow">→</span>
-            <span style="color: #a78bfa">Crop Regions</span>
+            <span style="color: var(--violet)">Crop Regions</span>
             <span class="arrow">→</span>
-            <span style="color: #00d4ff">ResNet50 Classifier</span>
+            <span style="color: var(--blue)">ResNet50 Classifier</span>
             <span class="arrow">→</span>
-            <span style="color: #a78bfa">Car Types</span>
+            <span style="color: var(--violet)">Car Types</span>
         </div>
         <div class="two-column" style="margin-top: 30px;">
             <div>
@@ -311,7 +356,7 @@
             </div>
         </div>
         <h3 style="margin-top: 40px;">8 Indonesian Car Types</h3>
-        <p style="font-size: 1.6rem; text-align: center; color: #a78bfa;">
+        <p style="font-size: 1.6rem; text-align: center; color: var(--base01);">
             Crossover • Hatchback • MPV • Offroad • Pickup • Sedan • Truck • Van
         </p>
         <span class="slide-number">4 / 10</span>
@@ -383,14 +428,54 @@
                 <th>Recall</th>
                 <th>F1-Score</th>
             </tr>
-            <tr><td>Crossover</td><td>0.85</td><td>0.81</td><td>0.83</td></tr>
-            <tr><td>Hatchback</td><td>0.88</td><td>0.83</td><td>0.85</td></tr>
-            <tr><td>MPV</td><td>0.80</td><td>0.90</td><td>0.85</td></tr>
-            <tr><td>Offroad</td><td>0.86</td><td>0.85</td><td>0.86</td></tr>
-            <tr><td>Pickup</td><td style="color: #00ff88">0.93</td><td>0.89</td><td style="color: #00ff88">0.91</td></tr>
-            <tr><td>Sedan</td><td>0.87</td><td>0.87</td><td>0.87</td></tr>
-            <tr><td>Truck</td><td style="color: #00ff88">0.92</td><td>0.88</td><td style="color: #00ff88">0.90</td></tr>
-            <tr><td>Van</td><td>0.90</td><td>0.90</td><td>0.90</td></tr>
+            <tr>
+                <td>Crossover</td>
+                <td>0.85</td>
+                <td>0.81</td>
+                <td>0.83</td>
+            </tr>
+            <tr>
+                <td>Hatchback</td>
+                <td>0.88</td>
+                <td>0.83</td>
+                <td>0.85</td>
+            </tr>
+            <tr>
+                <td>MPV</td>
+                <td>0.80</td>
+                <td>0.90</td>
+                <td>0.85</td>
+            </tr>
+            <tr>
+                <td>Offroad</td>
+                <td>0.86</td>
+                <td>0.85</td>
+                <td>0.86</td>
+            </tr>
+            <tr>
+                <td>Pickup</td>
+                <td style="color: var(--green); font-weight: bold;">0.93</td>
+                <td>0.89</td>
+                <td style="color: var(--green); font-weight: bold;">0.91</td>
+            </tr>
+            <tr>
+                <td>Sedan</td>
+                <td>0.87</td>
+                <td>0.87</td>
+                <td>0.87</td>
+            </tr>
+            <tr>
+                <td>Truck</td>
+                <td style="color: var(--green); font-weight: bold;">0.92</td>
+                <td>0.88</td>
+                <td style="color: var(--green); font-weight: bold;">0.90</td>
+            </tr>
+            <tr>
+                <td>Van</td>
+                <td>0.90</td>
+                <td>0.90</td>
+                <td>0.90</td>
+            </tr>
         </table>
         <span class="slide-number">7 / 10</span>
     </div>
@@ -418,9 +503,9 @@
         </div>
         <h3 style="margin-top: 40px;">Car Type Distribution in Traffic</h3>
         <p style="text-align: center; font-size: 1.4rem;">
-            <span class="highlight">MPV: 34.7%</span> • 
-            <span class="highlight">Sedan: 19.5%</span> • 
-            <span class="highlight">Hatchback: 16.1%</span> • 
+            <span class="highlight">MPV: 34.7%</span> •
+            <span class="highlight">Sedan: 19.5%</span> •
+            <span class="highlight">Hatchback: 16.1%</span> •
             Offroad: 12.0% • Van: 9.0%
         </p>
         <span class="slide-number">8 / 10</span>
@@ -475,7 +560,7 @@
         </div>
         <div class="center" style="margin-top: 60px;">
             <h1 style="font-size: 3rem;">Thank You!</h1>
-            <p style="margin-top: 20px; color: #64748b;">Questions?</p>
+            <p style="margin-top: 20px; color: var(--base1);">Questions?</p>
         </div>
         <span class="slide-number">10 / 10</span>
     </div>
@@ -489,10 +574,10 @@
         function showSlide(n) {
             const slides = document.querySelectorAll('.slide');
             slides.forEach(slide => slide.classList.remove('active'));
-            
+
             if (n > totalSlides) currentSlide = 1;
             if (n < 1) currentSlide = totalSlides;
-            
+
             document.getElementById(`slide${currentSlide}`).classList.add('active');
         }
 
@@ -518,4 +603,5 @@
         });
     </script>
 </body>
+
 </html>
