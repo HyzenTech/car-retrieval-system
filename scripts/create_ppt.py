@@ -1,8 +1,9 @@
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
+import os
 
 def create_presentation():
     prs = Presentation()
@@ -15,7 +16,7 @@ def create_presentation():
         'base00': RGBColor(101, 123, 131), # #657b83 Text
         'base01': RGBColor(88, 110, 117),  # #586e75
         'yellow': RGBColor(181, 137, 0),   # #b58900
-        'orange': RGBColor(203, 75, 22),   # #cb4b16 Title
+        'orange': RGBColor(203, 75, 22),   # #cb4b16
         'red':    RGBColor(220, 50, 47),   # #dc322f
         'magenta': RGBColor(211, 54, 130), # #d33682
         'violet': RGBColor(108, 113, 196), # #6c71c4
@@ -60,17 +61,12 @@ def create_presentation():
         
         title = slide.shapes.title
         title.text = title_text
+        title.text_frame.paragraphs[0].font.color.rgb = COLORS['yellow']
+        title.text_frame.paragraphs[0].font.bold = True
         
-        # Style Title
-        title_tf = title.text_frame
-        title_tf.paragraphs[0].font.color.rgb = COLORS['yellow']
-        title_tf.paragraphs[0].font.size = Pt(40)
-        title_tf.paragraphs[0].font.bold = True
-        
-        # Content
         body = slide.placeholders[1]
         tf = body.text_frame
-        tf.clear()  # Clear default empty paragraph
+        tf.clear()
         
         for item in content_items:
             p = tf.add_paragraph()
@@ -78,16 +74,40 @@ def create_presentation():
             p.font.color.rgb = COLORS['base00']
             p.font.size = Pt(24)
             p.space_after = Pt(20)
-            
-    def add_two_column_slide(title_text, col1_title, col1_items, col2_title, col2_items):
-        slide = prs.slides.add_slide(prs.slide_layouts[1]) # Using Title and Content as base
+
+    def add_image_slide(title_text, image_path, caption=None):
+        slide = prs.slides.add_slide(prs.slide_layouts[5]) # Title Only
         set_background(slide)
         
         title = slide.shapes.title
         title.text = title_text
         title.text_frame.paragraphs[0].font.color.rgb = COLORS['yellow']
         
-        # Manually create two text boxes
+        if os.path.exists(image_path):
+            img = slide.shapes.add_picture(image_path, Inches(1), Inches(2.0), height=Inches(4.5))
+            # Center image
+            img.left = int((prs.slide_width - img.width) / 2)
+            
+            if caption:
+                txBox = slide.shapes.add_textbox(Inches(1), Inches(6.6), Inches(8), Inches(1))
+                tf = txBox.text_frame
+                p = tf.add_paragraph()
+                p.text = caption
+                p.alignment = PP_ALIGN.CENTER
+                p.font.color.rgb = COLORS['base01']
+                p.font.size = Pt(16)
+        else:
+            print(f"Warning: Image not found at {image_path}")
+            
+    def add_two_column_slide(title_text, col1_title, col1_items, col2_title, col2_items):
+        slide = prs.slides.add_slide(prs.slide_layouts[1]) 
+        set_background(slide)
+        
+        title = slide.shapes.title
+        title.text = title_text
+        title.text_frame.paragraphs[0].font.color.rgb = COLORS['yellow']
+        title.text_frame.paragraphs[0].font.bold = True
+        
         left = Inches(0.5)
         top = Inches(2.0)
         width = Inches(4.5)
@@ -96,7 +116,6 @@ def create_presentation():
         # Column 1
         txBox1 = slide.shapes.add_textbox(left, top, width, height)
         tf1 = txBox1.text_frame
-        
         p = tf1.add_paragraph()
         p.text = col1_title
         p.font.bold = True
@@ -110,11 +129,11 @@ def create_presentation():
             p.font.size = Pt(20)
             p.font.color.rgb = COLORS['base00']
             p.level = 0
+            p.space_after = Pt(10)
             
         # Column 2
         txBox2 = slide.shapes.add_textbox(left + Inches(5.0), top, width, height)
         tf2 = txBox2.text_frame
-        
         p = tf2.add_paragraph()
         p.text = col2_title
         p.font.bold = True
@@ -128,16 +147,17 @@ def create_presentation():
             p.font.size = Pt(20)
             p.font.color.rgb = COLORS['base00']
             p.level = 0
+            p.space_after = Pt(10)
 
     def add_stats_slide(title_text, stats):
-        slide = prs.slides.add_slide(prs.slide_layouts[5]) # Title Only
+        slide = prs.slides.add_slide(prs.slide_layouts[5])
         set_background(slide)
         
         title = slide.shapes.title
         title.text = title_text
         title.text_frame.paragraphs[0].font.color.rgb = COLORS['yellow']
+        title.text_frame.paragraphs[0].font.bold = True
         
-        # Grid of stats
         start_x = Inches(0.5)
         start_y = Inches(2.5)
         box_width = Inches(2.2)
@@ -147,7 +167,7 @@ def create_presentation():
         for i, (value, label) in enumerate(stats):
             left = start_x + (i * (box_width + gap))
             
-            # Draw box background
+            # Draw box
             shape = slide.shapes.add_shape(
                 MSO_SHAPE.ROUNDED_RECTANGLE, left, start_y, box_width, box_height
             )
@@ -155,8 +175,7 @@ def create_presentation():
             shape.fill.fore_color.rgb = COLORS['base2']
             shape.line.color.rgb = COLORS['base1']
             
-            # Value
-            txt_box = slide.shapes.add_textbox(left, start_y + Inches(0.2), box_width, Inches(0.8))
+            txt_box = slide.shapes.add_textbox(left, start_y + Inches(0.25), box_width, Inches(0.8))
             p = txt_box.text_frame.paragraphs[0]
             p.text = value
             p.alignment = PP_ALIGN.CENTER
@@ -164,8 +183,7 @@ def create_presentation():
             p.font.size = Pt(32)
             p.font.color.rgb = COLORS['magenta']
             
-            # Label
-            label_box = slide.shapes.add_textbox(left, start_y + Inches(0.8), box_width, Inches(0.5))
+            label_box = slide.shapes.add_textbox(left, start_y + Inches(0.85), box_width, Inches(0.5))
             p = label_box.text_frame.paragraphs[0]
             p.text = label
             p.alignment = PP_ALIGN.CENTER
@@ -177,54 +195,72 @@ def create_presentation():
     # 1. Title
     add_title_slide(
         "Car Retrieval System",
-        "An End-to-End Deep Learning Approach for\nIndonesian Vehicle Detection and Classification\n\nMachine Learning Engineering Challenge\nJanuary 2026"
+        "An End-to-End Deep Learning Approach for\nIndonesian Vehicle Detection and Classification"
     )
 
     # 2. Problem Statement
     add_two_column_slide(
         "Problem Statement",
-        "Challenge", [
-            "Develop Object Detection Model for Cars",
-            "Classify Indonesian Car Types",
-            "Integrate both into unified pipeline",
-            "Process real-world traffic video"
-        ],
-        "Requirements", [
+        "Measurements", [
             "Detect multiple car instances",
-            "8 car type categories",
-            "CNN-based feature extraction",
-            "Deep Learning Framework (PyTorch)"
+            "Classify 8 Indonesian car types",
+            "Process traffic video"
+        ],
+        "Constraints", [
+            "Use Deep Learning (PyTorch)",
+            "Real-time capability desirable",
+            "Robust to varied visual conditions"
         ]
     )
 
     # 3. System Architecture
     slide = prs.slides.add_slide(prs.slide_layouts[5])
     set_background(slide)
-    
     title = slide.shapes.title
     title.text = "System Architecture"
     title.text_frame.paragraphs[0].font.color.rgb = COLORS['yellow']
+    title.text_frame.paragraphs[0].font.bold = True
+
+    # Draw Flowchart Boxes
+    shapes = slide.shapes
+    mid_y = Inches(3.5)
     
-    # Text representation of flow
-    flow_box = slide.shapes.add_textbox(Inches(0.5), Inches(2.5), Inches(9), Inches(1))
-    p = flow_box.text_frame.paragraphs[0]
-    p.text = "Input Image/Video  →  YOLOv8 Detector  →  Crop Regions  →  ResNet50 Classifier  →  Car Types"
-    p.font.size = Pt(18)
-    p.font.name = "Courier New"
-    p.alignment = PP_ALIGN.CENTER
-    p.font.color.rgb = COLORS['base00']
+    # Coordinates for 5 steps
+    steps = [
+        ("Input\nVideo/Image", COLORS['base1']),
+        ("YOLOv8\nDetector", COLORS['blue']),
+        ("Crop\nRegions", COLORS['base1']),
+        ("ResNet50\nClassifier", COLORS['blue']),
+        ("Output\nAnnnotations", COLORS['green'])
+    ]
     
-    # Details
-    add_two_column_slide(
-        "System Details", 
-        "Detection Stage", ["YOLOv8-nano (COCO pretrained)", "Filters vehicle classes", "Returns BBoxes + Confidence"],
-        "Classification Stage", ["ResNet50 backbone (ImageNet)", "Custom classification head", "8 output classes"]
-    )
-    # Correcting the flow: remove the extra slide, merge into one if possible. 
-    # For simplicity, let's keep the details on the separate slide created by add_two_column_slide
-    # But wait, add_two_column_slide creates NEW slide. 
-    # Let's just create a custom single slide for Arch.
+    box_w = Inches(1.6)
+    box_h = Inches(1.2)
+    gap = Inches(0.3)
+    start_x = (prs.slide_width - (5 * box_w) - (4 * gap)) / 2
     
+    for i, (text, color) in enumerate(steps):
+        x = start_x + i * (box_w + gap)
+        shape = shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, mid_y, box_w, box_h)
+        shape.fill.solid()
+        shape.fill.fore_color.rgb = color
+        shape.line.color.rgb = COLORS['base01']
+        
+        tf = shape.text_frame
+        tf.clear()
+        p = tf.add_paragraph()
+        p.text = text
+        p.alignment = PP_ALIGN.CENTER
+        p.font.color.rgb = RGBColor(255, 255, 255) # White text for contrast
+        p.font.bold = True
+        
+        # Arrow
+        if i < len(steps) - 1:
+            arrow = shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, x + box_w + Inches(0.05), mid_y + box_h/2 - Inches(0.1), Inches(0.2), Inches(0.2))
+            arrow.fill.solid()
+            arrow.fill.fore_color.rgb = COLORS['orange']
+            arrow.line.fill.background()
+
     # 4. Dataset
     add_stats_slide("Dataset Overview", [
         ("17,171", "Total Images"),
@@ -232,138 +268,63 @@ def create_presentation():
         ("13,542", "Train Samples"),
         ("1,756", "Test Samples")
     ])
-    # Add classes text
-    slide = prs.slides[-1]
-    classes_box = slide.shapes.add_textbox(Inches(0.5), Inches(5.0), Inches(9), Inches(1))
-    p = classes_box.text_frame.add_paragraph()
-    p.text = "Crossover • Hatchback • MPV • Offroad • Pickup • Sedan • Truck • Van"
-    p.alignment = PP_ALIGN.CENTER
-    p.font.size = Pt(24)
-    p.font.color.rgb = COLORS['base01']
+    
+    # 5. Classifier Details
+    add_content_slide("Technical Implementation", [
+        "Detector: YOLOv8-nano (COCO pretrained)",
+        "Classifier: ResNet50 (ImageNet pretrained)",
+        "Optimizer: AdamW (LR: 1e-4) + Cosine Annealing",
+        "Augmentation: RandomCrop, ColorJitter, Rotation",
+        "Loss: CrossEntropy with Label Smoothing (0.1)"
+    ])
 
-    # 5. Classifier Arch
-    add_two_column_slide(
-        "Classifier Architecture",
-        "ResNet50 Backbone", [
-            "Pre-trained on ImageNet",
-            "50 convolutional layers",
-            "Skip connections",
-            "24.5M parameters"
-        ],
-        "Custom Head", [
-            "Global Average Pooling",
-            "Dropout (p=0.5)",
-            "FC: 2048 → 512 → 8",
-            "Softmax output"
-        ]
-    )
-
-    # 6. Results Overview
-    add_stats_slide("Results Overview", [
+    # 6. Results Summary
+    add_stats_slide("Performance Summary", [
         ("86.33%", "Test Accuracy"),
         ("86.53%", "Precision"),
         ("86.34%", "F1-Score"),
         ("13.6", "Video FPS")
     ])
 
-    # 7. Per-Class Table
-    slide = prs.slides.add_slide(prs.slide_layouts[5])
-    set_background(slide)
-    
-    title = slide.shapes.title
-    title.text = "Per-Class Performance"
-    title.text_frame.paragraphs[0].font.color.rgb = COLORS['yellow']
-    
-    table_placeholder = slide.shapes.add_table(9, 4, Inches(1), Inches(2.0), Inches(8), Inches(4.5))
-    table = table_placeholder.table
-    
-    # Headers
-    headers = ["Class", "Precision", "Recall", "F1-Score"]
-    for i, h in enumerate(headers):
-        cell = table.cell(0, i)
-        cell.text = h
-        cell.fill.solid()
-        cell.fill.fore_color.rgb = COLORS['base2']
-        p = cell.text_frame.paragraphs[0]
-        p.font.bold = True
-        p.font.color.rgb = COLORS['orange']
-
-    # Data
-    data = [
-        ("Crossover", 0.85, 0.81, 0.83),
-        ("Hatchback", 0.88, 0.83, 0.85),
-        ("MPV", 0.80, 0.90, 0.85),
-        ("Offroad", 0.86, 0.85, 0.86),
-        ("Pickup", 0.93, 0.89, 0.91),
-        ("Sedan", 0.87, 0.87, 0.87),
-        ("Truck", 0.92, 0.88, 0.90),
-        ("Van", 0.90, 0.90, 0.90)
-    ]
-    
-    for r, row_data in enumerate(data, 1):
-        for c, val in enumerate(row_data):
-            cell = table.cell(r, c)
-            cell.text = str(val)
-            cell.text_frame.paragraphs[0].font.color.rgb = COLORS['base00']
-            
-            # Highlight high scores
-            if isinstance(val, float) and val >= 0.90:
-                cell.text_frame.paragraphs[0].font.color.rgb = COLORS['green']
-                cell.text_frame.paragraphs[0].font.bold = True
-
-    # 8. Video Inference
-    add_stats_slide("Video Inference Results", [
-        ("2,960", "Frames Processed"),
-        ("73.7ms", "Avg Inference"),
-        ("14,107", "Car Detections"),
-        ("197s", "Video Duration")
-    ])
-    
-    slide = prs.slides[-1]
-    dist_box = slide.shapes.add_textbox(Inches(0.5), Inches(5.0), Inches(9), Inches(1))
-    p = dist_box.text_frame.add_paragraph()
-    p.text = "MPV: 34.7% • Sedan: 19.5% • Hatchback: 16.1% • Offroad: 12.0%"
-    p.alignment = PP_ALIGN.CENTER
-    p.font.size = Pt(20)
-    p.font.color.rgb = COLORS['base01']
-
-    # 9. Key Findings
-    add_two_column_slide(
-        "Key Findings",
-        "Insights", [
-            "Pickup & Truck: High accuracy (>90%) due to distinct shapes",
-            "MPV: High recall but confused with Crossovers",
-            "Real-time capable at 13.6 FPS"
-        ],
-        "Tech Stack", [
-            "PyTorch",
-            "Ultralytics YOLOv8",
-            "torchvision",
-            "OpenCV",
-            "scikit-learn"
-        ]
+    # 7. Confusion Matrix (Image)
+    add_image_slide(
+        "Confusion Matrix Analysis", 
+        "outputs/evaluation/confusion_matrix.png",
+        "Diagonal dominance indicates strong performance. Confusion visible between Crossover/MPV."
     )
+
+    # 8. Per-Class Metrics (Image)
+    add_image_slide(
+        "Per-Class Performance Metrics", 
+        "outputs/evaluation/per_class_metrics.png",
+        "Pickup and Truck achieve highest F1-scores (>0.90). Crossover is lowest (0.83)."
+    )
+
+    # 9. Video Inference
+    add_stats_slide("Video Inference Statistics", [
+        ("2,960", "Frames Processed"),
+        ("73.7ms", "Latency/Frame"),
+        ("14,107", "Detections"),
+        ("197s", "Duration")
+    ])
 
     # 10. Conclusion
     add_two_column_slide(
-        "Conclusion",
-        "Achievements", [
-            "86.33% Test Accuracy",
-            "All 8 car types handled",
-            "End-to-End Pipeline",
-            "Video & Image Support"
+        "Conclusion & Future Work",
+        "Key Achievements", [
+            "Successful 2-stage pipeline integration",
+            "Reliable classification (86%+ accuracy)",
+            "Real-time viable processing speed"
         ],
-        "Future Work", [
-            "Vision Transformers (ViT)",
-            "Dataset Expansion",
-            "Edge Deployment (TensorRT)",
-            "Vehicle Tracking (DeepSORT)"
+        "Future Improvements", [
+            "Adopt Vision Transformers (ViT)",
+            "Expand dataset for rare classes",
+            "Optimize for Edge Devices (TensorRT)"
         ]
     )
 
-    # Save
     prs.save('presentation.pptx')
-    print("Presentation saved as presentation.pptx")
+    print("Enhanced presentation saved as presentation.pptx")
 
 if __name__ == "__main__":
     create_presentation()
