@@ -269,12 +269,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [Ultralytics YOLOv8](https://github.com/ultralytics/ultralytics) for object detection
 - [PyTorch](https://pytorch.org/) and [torchvision](https://pytorch.org/vision/stable/index.html) for deep learning framework
-- Indonesian car image dataset providers
+- Indonesian car image dataset providers (https://www.kaggle.com/datasets/muhammadluthfiarifin/indonesian-cars-classification-dataset)
 
-## 📧 Contact
-
-For questions or contributions, please open an issue or submit a pull request.
-
----
-
-**Made with ❤️ for Indonesian Car Detection**
