@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Retrieval System - Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            padding: 60px 80px;
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, #00d4ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: #00d4ff;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #7c3aed;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: #a78bfa;
+            margin: 20px 0;
+        }
+
+        p {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            color: #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 30px;
+        }
+
+        li {
+            font-size: 1.4rem;
+            margin: 15px 0;
+            position: relative;
+            color: #e2e8f0;
+        }
+
+        li::before {
+            content: "▸";
+            position: absolute;
+            left: -30px;
+            color: #00d4ff;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            color: #a78bfa;
+            margin-top: 20px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            flex: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: rgba(124, 58, 237, 0.2);
+            border: 1px solid #7c3aed;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: #a78bfa;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            font-size: 1.2rem;
+        }
+
+        th {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border-bottom: 2px solid #00d4ff;
+        }
+
+        td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        tr:hover td {
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        .architecture-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #7c3aed;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            font-family: monospace;
+            font-size: 1.4rem;
+            text-align: center;
+        }
+
+        .arrow {
+            color: #00d4ff;
+            margin: 0 15px;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            right: 50px;
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        .nav-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            color: #64748b;
+        }
+
+        .highlight {
+            background: rgba(0, 212, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 5px;
+            color: #00d4ff;
+        }
+
+        .conclusion-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .conclusion-card {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid #00d4ff;
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        .conclusion-card h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Title -->
+    <div class="slide active" id="slide1">
+        <div class="center">
+            <h1>🚗 Car Retrieval System</h1>
+            <p class="subtitle">An End-to-End Deep Learning Approach for<br>Indonesian Vehicle Detection and Classification</p>
+            <div style="margin-top: 60px; color: #64748b; font-size: 1.2rem;">
+                <p>Machine Learning Engineering Challenge</p>
+                <p>January 2026</p>
+            </div>
+        </div>
+        <span class="slide-number">1 / 10</span>
+    </div>
+
+    <!-- Slide 2: Problem Statement -->
+    <div class="slide" id="slide2">
+        <h2>Problem Statement</h2>
+        <div class="two-column">
+            <div>
+                <h3>Challenge</h3>
+                <ul>
+                    <li>Develop Object Detection Model for Cars</li>
+                    <li>Classify Indonesian Car Types</li>
+                    <li>Integrate both into unified pipeline</li>
+                    <li>Process real-world traffic video</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Requirements</h3>
+                <ul>
+                    <li>Detect multiple car instances</li>
+                    <li>8 car type categories</li>
+                    <li>CNN-based feature extraction</li>
+                    <li>Deep Learning Framework (PyTorch)</li>
+                </ul>
+            </div>
+        </div>
+        <span class="slide-number">2 / 10</span>
+    </div>
+
+    <!-- Slide 3: System Architecture -->
+    <div class="slide" id="slide3">
+        <h2>System Architecture</h2>
+        <div class="architecture-box">
+            <span style="color: #a78bfa">Input Image/Video</span>
+            <span class="arrow">→</span>
+            <span style="color: #00d4ff">YOLOv8 Detector</span>
+            <span class="arrow">→</span>
+            <span style="color: #a78bfa">Crop Regions</span>
+            <span class="arrow">→</span>
+            <span style="color: #00d4ff">ResNet50 Classifier</span>
+            <span class="arrow">→</span>
+            <span style="color: #a78bfa">Car Types</span>
+        </div>
+        <div class="two-column" style="margin-top: 30px;">
+            <div>
+                <h3>Detection Stage</h3>
+                <ul>
+                    <li>YOLOv8-nano (pre-trained on COCO)</li>
+                    <li>Filters for vehicle classes</li>
+                    <li>Returns bounding boxes + confidence</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Classification Stage</h3>
+                <ul>
+                    <li>ResNet50 backbone (ImageNet)</li>
+                    <li>Custom classification head</li>
+                    <li>8 output classes</li>
+                </ul>
+            </div>
+        </div>
+        <span class="slide-number">3 / 10</span>
+    </div>
+
+    <!-- Slide 4: Dataset -->
+    <div class="slide" id="slide4">
+        <h2>Dataset Overview</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">17,171</div>
+                <div class="stat-label">Total Images</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Car Types</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">13,542</div>
+                <div class="stat-label">Train Samples</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">1,756</div>
+                <div class="stat-label">Test Samples</div>
+            </div>
+        </div>
+        <h3 style="margin-top: 40px;">8 Indonesian Car Types</h3>
+        <p style="font-size: 1.6rem; text-align: center; color: #a78bfa;">
+            Crossover • Hatchback • MPV • Offroad • Pickup • Sedan • Truck • Van
+        </p>
+        <span class="slide-number">4 / 10</span>
+    </div>
+
+    <!-- Slide 5: Model Architecture -->
+    <div class="slide" id="slide5">
+        <h2>Classifier Architecture</h2>
+        <div class="two-column">
+            <div>
+                <h3>ResNet50 Backbone</h3>
+                <ul>
+                    <li>Pre-trained on ImageNet</li>
+                    <li>50 convolutional layers</li>
+                    <li>Skip connections for gradient flow</li>
+                    <li>24.5M parameters</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Custom Head</h3>
+                <ul>
+                    <li>Global Average Pooling</li>
+                    <li>Dropout (p=0.5)</li>
+                    <li>FC: 2048 → 512 → 8</li>
+                    <li>Softmax output</li>
+                </ul>
+            </div>
+        </div>
+        <h3 style="margin-top: 40px;">Training Configuration</h3>
+        <p>AdamW optimizer • Learning Rate: 10⁻⁴ • Cosine Annealing • Label Smoothing: 0.1 • 20 Epochs</p>
+        <span class="slide-number">5 / 10</span>
+    </div>
+
+    <!-- Slide 6: Results Overview -->
+    <div class="slide" id="slide6">
+        <h2>Results Overview</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">86.33%</div>
+                <div class="stat-label">Test Accuracy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">86.53%</div>
+                <div class="stat-label">Precision</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">86.34%</div>
+                <div class="stat-label">F1-Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">13.6</div>
+                <div class="stat-label">Video FPS</div>
+            </div>
+        </div>
+        <div style="margin-top: 50px; text-align: center;">
+            <p style="font-size: 1.6rem;">✅ Strong performance across all 8 car type categories</p>
+            <p style="font-size: 1.6rem;">✅ Real-time video processing capability</p>
+        </div>
+        <span class="slide-number">6 / 10</span>
+    </div>
+
+    <!-- Slide 7: Per-Class Performance -->
+    <div class="slide" id="slide7">
+        <h2>Per-Class Performance</h2>
+        <table>
+            <tr>
+                <th>Class</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-Score</th>
+            </tr>
+            <tr><td>Crossover</td><td>0.85</td><td>0.81</td><td>0.83</td></tr>
+            <tr><td>Hatchback</td><td>0.88</td><td>0.83</td><td>0.85</td></tr>
+            <tr><td>MPV</td><td>0.80</td><td>0.90</td><td>0.85</td></tr>
+            <tr><td>Offroad</td><td>0.86</td><td>0.85</td><td>0.86</td></tr>
+            <tr><td>Pickup</td><td style="color: #00ff88">0.93</td><td>0.89</td><td style="color: #00ff88">0.91</td></tr>
+            <tr><td>Sedan</td><td>0.87</td><td>0.87</td><td>0.87</td></tr>
+            <tr><td>Truck</td><td style="color: #00ff88">0.92</td><td>0.88</td><td style="color: #00ff88">0.90</td></tr>
+            <tr><td>Van</td><td>0.90</td><td>0.90</td><td>0.90</td></tr>
+        </table>
+        <span class="slide-number">7 / 10</span>
+    </div>
+
+    <!-- Slide 8: Video Inference -->
+    <div class="slide" id="slide8">
+        <h2>Video Inference Results</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">2,960</div>
+                <div class="stat-label">Frames Processed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">73.7ms</div>
+                <div class="stat-label">Avg Inference Time</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">14,107</div>
+                <div class="stat-label">Car Detections</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">197s</div>
+                <div class="stat-label">Video Duration</div>
+            </div>
+        </div>
+        <h3 style="margin-top: 40px;">Car Type Distribution in Traffic</h3>
+        <p style="text-align: center; font-size: 1.4rem;">
+            <span class="highlight">MPV: 34.7%</span> • 
+            <span class="highlight">Sedan: 19.5%</span> • 
+            <span class="highlight">Hatchback: 16.1%</span> • 
+            Offroad: 12.0% • Van: 9.0%
+        </p>
+        <span class="slide-number">8 / 10</span>
+    </div>
+
+    <!-- Slide 9: Key Findings -->
+    <div class="slide" id="slide9">
+        <h2>Key Findings</h2>
+        <div class="conclusion-grid">
+            <div class="conclusion-card">
+                <h3>🎯 High Performers</h3>
+                <p>Pickup (0.91 F1) and Truck (0.90 F1) benefit from distinctive visual features</p>
+            </div>
+            <div class="conclusion-card">
+                <h3>📊 MPV Insight</h3>
+                <p>High recall (0.90) but lower precision (0.80) - some false positives from similar shapes</p>
+            </div>
+            <div class="conclusion-card">
+                <h3>⚡ Real-Time</h3>
+                <p>13.6 FPS processing enables practical deployment for traffic monitoring</p>
+            </div>
+        </div>
+        <h3 style="margin-top: 40px;">Technologies Used</h3>
+        <p style="text-align: center;">
+            PyTorch • Ultralytics YOLOv8 • torchvision • OpenCV • scikit-learn
+        </p>
+        <span class="slide-number">9 / 10</span>
+    </div>
+
+    <!-- Slide 10: Conclusion -->
+    <div class="slide" id="slide10">
+        <h2>Conclusion</h2>
+        <div class="two-column">
+            <div>
+                <h3>Achievements</h3>
+                <ul>
+                    <li>86.33% test accuracy</li>
+                    <li>8 car types classified</li>
+                    <li>Real-time video processing</li>
+                    <li>End-to-end integrated pipeline</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Future Work</h3>
+                <ul>
+                    <li>Implement attention-based ViT classifier</li>
+                    <li>Expand dataset with more samples</li>
+                    <li>Edge device deployment</li>
+                    <li>Add car brand/model recognition</li>
+                </ul>
+            </div>
+        </div>
+        <div class="center" style="margin-top: 60px;">
+            <h1 style="font-size: 3rem;">Thank You!</h1>
+            <p style="margin-top: 20px; color: #64748b;">Questions?</p>
+        </div>
+        <span class="slide-number">10 / 10</span>
+    </div>
+
+    <div class="nav-hint">Use ← → arrow keys to navigate | Press F for fullscreen</div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            document.getElementById(`slide${currentSlide}`).classList.add('active');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                currentSlide++;
+                showSlide(currentSlide);
+            } else if (e.key === 'ArrowLeft') {
+                currentSlide--;
+                showSlide(currentSlide);
+            } else if (e.key === 'f' || e.key === 'F') {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    document.documentElement.requestFullscreen();
+                }
+            }
+        });
+
+        document.addEventListener('click', () => {
+            currentSlide++;
+            showSlide(currentSlide);
+        });
+    </script>
+</body>
+</html>

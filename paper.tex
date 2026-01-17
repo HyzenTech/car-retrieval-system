@@ -1,0 +1,191 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath,amsfonts}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{array}
+\usepackage{textcomp}
+\usepackage{stfloats}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+\begin{document}
+
+\title{Indonesian Car Retrieval System: An End-to-End Deep Learning Approach for Vehicle Detection and Type Classification}
+
+\author{\IEEEauthorblockN{Author Name}
+\IEEEauthorblockA{Institution Name\\
+City, Country\\
+email@example.com}}
+
+\maketitle
+
+\begin{abstract}
+This paper presents a comprehensive Car Retrieval System designed for Indonesian vehicle detection and classification. The system integrates YOLOv8 object detection with a ResNet50-based classifier to identify eight distinct car types commonly found in Indonesia. Our approach achieves 86.33\% classification accuracy on a dataset of over 17,000 images spanning crossover, hatchback, MPV, offroad, pickup, sedan, truck, and van categories. The integrated pipeline processes video at 13.6 FPS, demonstrating real-time capability. Experimental results show strong per-class performance with F1-scores ranging from 0.83 to 0.91 across all vehicle categories.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Object Detection, Car Classification, Deep Learning, YOLOv8, ResNet50, Transfer Learning, Indonesian Vehicles
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+The rise of intelligent transportation systems has created a growing demand for automated vehicle identification and classification systems. In the Indonesian context, understanding the distribution and types of vehicles on roads is crucial for traffic management, urban planning, and automated toll systems.
+
+This paper addresses the challenge of developing an end-to-end car retrieval system that can:
+\begin{enumerate}
+    \item Detect multiple vehicle instances in images and video streams
+    \item Classify each detected vehicle into one of eight Indonesian car type categories
+    \item Operate in real-time for practical deployment scenarios
+\end{enumerate}
+
+We propose a two-stage pipeline combining state-of-the-art object detection with custom-trained classification. The YOLOv8 detector \cite{yolov8} identifies vehicle regions, while a ResNet50-based classifier \cite{resnet} determines the specific car type.
+
+\section{Related Work}
+
+\subsection{Object Detection}
+Modern object detection has evolved from traditional methods like HOG+SVM to deep learning approaches. The YOLO family \cite{yolo} revolutionized real-time detection by treating detection as a regression problem. YOLOv8 represents the latest advancement, offering improved accuracy and speed through architectural innovations including a C2f module and anchor-free detection heads.
+
+\subsection{Vehicle Classification}
+Vehicle classification has been extensively studied using CNN architectures. ResNet \cite{resnet} introduced skip connections enabling training of very deep networks. Transfer learning from ImageNet \cite{imagenet} pretrained models has become standard practice, allowing effective training on smaller domain-specific datasets.
+
+\section{Methodology}
+
+\subsection{System Architecture}
+
+Our pipeline consists of two main components as illustrated in Figure \ref{fig:architecture}:
+
+\begin{enumerate}
+    \item \textbf{Detection Stage}: YOLOv8-nano pretrained on COCO dataset filters for vehicle classes (car, bus, truck)
+    \item \textbf{Classification Stage}: ResNet50 with custom classification head trained on Indonesian car types
+\end{enumerate}
+
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.9\columnwidth}{
+\centering
+Input Image $\rightarrow$ YOLOv8 Detector $\rightarrow$ Crop Regions $\rightarrow$ ResNet50 Classifier $\rightarrow$ Car Types
+}}
+\caption{System architecture showing the two-stage detection and classification pipeline.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Dataset}
+
+The Indonesian car dataset contains 17,171 images across eight categories:
+
+\begin{table}[h]
+\caption{Dataset Distribution}
+\label{tab:dataset}
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Class} & \textbf{Train} & \textbf{Val} & \textbf{Test} \\
+\midrule
+Crossover & 2,125 & 265 & 266 \\
+Hatchback & 2,090 & 309 & 280 \\
+MPV & 2,469 & 342 & 313 \\
+Offroad & 1,919 & 240 & 240 \\
+Pickup & 744 & 153 & 123 \\
+Sedan & 1,961 & 284 & 255 \\
+Truck & 659 & 83 & 82 \\
+Van & 1,575 & 197 & 197 \\
+\midrule
+\textbf{Total} & 13,542 & 1,873 & 1,756 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Classification Model}
+
+The classifier architecture builds upon ResNet50 with modifications:
+
+\begin{itemize}
+    \item ResNet50 backbone (ImageNet pretrained)
+    \item Global Average Pooling
+    \item Dropout (p=0.5)
+    \item Fully Connected: 2048 $\rightarrow$ 512 $\rightarrow$ 8
+\end{itemize}
+
+\subsection{Training Configuration}
+
+Training employed the following hyperparameters:
+\begin{itemize}
+    \item Optimizer: AdamW ($\beta_1=0.9$, $\beta_2=0.999$)
+    \item Learning Rate: $10^{-4}$ with cosine annealing
+    \item Batch Size: 32
+    \item Epochs: 20
+    \item Label Smoothing: 0.1
+\end{itemize}
+
+Data augmentation included: random crop, horizontal flip, color jitter, rotation ($\pm15°$), and random erasing.
+
+\section{Experimental Results}
+
+\subsection{Classification Performance}
+
+Table \ref{tab:results} presents the per-class classification metrics on the test set.
+
+\begin{table}[h]
+\caption{Classification Results on Test Set}
+\label{tab:results}
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Class} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
+\midrule
+Crossover & 0.85 & 0.81 & 0.83 \\
+Hatchback & 0.88 & 0.83 & 0.85 \\
+MPV & 0.80 & 0.90 & 0.85 \\
+Offroad & 0.86 & 0.85 & 0.86 \\
+Pickup & 0.93 & 0.89 & 0.91 \\
+Sedan & 0.87 & 0.87 & 0.87 \\
+Truck & 0.92 & 0.88 & 0.90 \\
+Van & 0.90 & 0.90 & 0.90 \\
+\midrule
+\textbf{Weighted Avg} & 0.87 & 0.86 & 0.86 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Overall test accuracy: \textbf{86.33\%}
+
+\subsection{Video Inference}
+
+The integrated pipeline was evaluated on a 197-second traffic video:
+
+\begin{itemize}
+    \item Frames Processed: 2,960
+    \item Average FPS: 13.6
+    \item Average Inference Time: 73.7ms
+    \item Total Detections: 14,107
+\end{itemize}
+
+The car type distribution detected: MPV (34.7\%), Sedan (19.5\%), Hatchback (16.1\%), Offroad (12.0\%), Van (9.0\%), Pickup (4.1\%), Crossover (3.1\%), Truck (1.5\%).
+
+\subsection{Analysis}
+
+The highest performing classes (Pickup: 0.91 F1, Truck: 0.90 F1) benefit from distinctive visual features. Lower performance on Crossover (0.83 F1) reflects inherent similarity with SUV-like vehicles. MPV shows high recall (0.90) but lower precision (0.80), indicating some false positives from similar body shapes.
+
+\section{Conclusion}
+
+We presented a complete car retrieval system achieving 86.33\% classification accuracy across eight Indonesian car types. The integration of YOLOv8 detection with ResNet50 classification enables real-time video processing at 13.6 FPS. Future work includes expanding the dataset, implementing attention-based classifiers like ViT, and deploying on edge devices.
+
+\section*{Acknowledgment}
+
+The authors thank the dataset providers for the Indonesian car image collection.
+
+\begin{thebibliography}{00}
+\bibitem{yolov8} G. Jocher, A. Chaurasia, and J. Qiu, ``Ultralytics YOLO,'' 2023. [Online]. Available: https://github.com/ultralytics/ultralytics
+
+\bibitem{yolo} J. Redmon, S. Divvala, R. Girshick, and A. Farhadi, ``You Only Look Once: Unified, Real-Time Object Detection,'' in \textit{Proc. IEEE CVPR}, 2016, pp. 779--788.
+
+\bibitem{resnet} K. He, X. Zhang, S. Ren, and J. Sun, ``Deep Residual Learning for Image Recognition,'' in \textit{Proc. IEEE CVPR}, 2016, pp. 770--778.
+
+\bibitem{imagenet} J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, and L. Fei-Fei, ``ImageNet: A Large-Scale Hierarchical Image Database,'' in \textit{Proc. IEEE CVPR}, 2009, pp. 248--255.
+\end{thebibliography}
+
+\end{document}
